@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Employees\Schemas;
 
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class EmployeeForm
@@ -10,7 +11,12 @@ class EmployeeForm
     {
         return $schema
             ->components([
-                //
+                TextInput::make('first_name'),
+                TextInput::make('last_name'),
+                TextInput::make('email'),
+                TextInput::make('phone'),
+                TextInput::make('position'),
+                TextInput::make('salary'),
             ]);
     }
 }
