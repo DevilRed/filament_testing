@@ -16,9 +16,15 @@ class ProjectsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('description'),
-                TextColumn::make('status'),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('description')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('status')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
