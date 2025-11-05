@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Employee extends Model
 {
@@ -14,4 +15,8 @@ class Employee extends Model
         'position',
         'salary'
     ];
+    public function projecct(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
 }
