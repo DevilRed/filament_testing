@@ -43,10 +43,18 @@ class EmployeesRelationManager extends RelationManager
         ->components([
             TextInput::make('first_name')->required(),
             TextInput::make('last_name')->required(),
-            TextInput::make('email')->required(),
-            TextInput::make('phone')->required(),
+            TextInput::make('email')
+                ->required()
+                ->maxLength(255)
+                ->unique(ignoreRecord: true),
+            TextInput::make('phone')->required()
+                ->tel()
+                ->maxLength(255),
             TextInput::make('position')->required(),
-            TextInput::make('salary')->required(),
+            TextInput::make('salary')
+                ->required()
+                ->numeric()
+                ->prefix('$'),
             Select::make('project_id')
                 ->relationship('project', 'name')
                 ->default(fn (RelationManager $livewire): int => $livewire->getOwnerRecord()->id)
