@@ -16,7 +16,7 @@ class Employee extends Model
         'salary',
         'project_id'
     ];
-    public function projecct(): BelongsTo
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
