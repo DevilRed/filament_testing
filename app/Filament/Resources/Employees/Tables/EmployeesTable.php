@@ -21,7 +21,8 @@ class EmployeesTable
                 TextColumn::make('email'),
                 TextColumn::make('phone'),
                 TextColumn::make('position'),
-                TextColumn::make('salary'),
+                TextColumn::make('salary')
+                    ->money('usd')
             ])
             ->filters([
                 //
