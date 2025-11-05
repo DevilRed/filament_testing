@@ -13,13 +13,21 @@ class ProjectForm
     {
         return $schema
             ->components([
-                TextInput::make('name'),
-                Textarea::make('description'),
+                TextInput::make('name')
+                    ->label('Name')
+                    ->required()
+                    ->minLength(2)
+                    ->maxLength(100),
+                Textarea::make('description')
+                    ->label('Description')
+                    ->required(),
                 Select::make('status')
                     ->options(([
                         'pending' => 'Pending',
                         'active' => 'Active',
                     ]))
+                    ->label('Status - select an option')
+                    ->default('pending')
             ]);
     }
 }
