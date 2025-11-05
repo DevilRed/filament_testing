@@ -13,7 +13,8 @@ class Employee extends Model
         'email',
         'phone',
         'position',
-        'salary'
+        'salary',
+        'project_id'
     ];
     public function projecct(): BelongsTo
     {

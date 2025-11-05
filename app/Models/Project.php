@@ -11,7 +11,6 @@ class Project extends Model
         'name',
         'description',
         'status',
-        'project_id'
     ];
     public function employees():HasMany
     {

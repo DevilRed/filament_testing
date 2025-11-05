@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class ProjectForm
@@ -10,7 +13,13 @@ class ProjectForm
     {
         return $schema
             ->components([
-                //
+                TextInput::make('name'),
+                Textarea::make('description'),
+                Select::make('status')
+                    ->options(([
+                        'pending' => 'Pending',
+                        'active' => 'Active',
+                    ]))
             ]);
     }
 }
