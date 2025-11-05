@@ -4,9 +4,12 @@ namespace App\Filament\Resources\Projects\RelationManagers;
 
 use App\Filament\Resources\Employees\EmployeeResource;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Schemas\Schema;
 
 class EmployeesRelationManager extends RelationManager
 {
@@ -20,10 +23,11 @@ class EmployeesRelationManager extends RelationManager
                 TextColumn::make('first_name'),
                 TextColumn::make('last_name'),
                 TextColumn::make('email'),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable(),
-                // Add other columns as needed
+                TextColumn::make('phone'),
+                TextColumn::make('position'),
+                TextColumn::make('salary'),
+                TextColumn::make('project_id')
+                    ->label('Project'),
             ])
             ->filters([
                 //
@@ -31,14 +35,24 @@ class EmployeesRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make(),
             ]);
-            /* ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]); */
     }
+
+    public function form(Schema $schema): Schema
+{
+    return $schema
+        ->components([
+            TextInput::make('first_name')->required(),
+            TextInput::make('last_name')->required(),
+            TextInput::make('email')->required(),
+            TextInput::make('phone')->required(),
+            TextInput::make('position')->required(),
+            TextInput::make('salary')->required(),
+            Select::make('project_id')
+                ->relationship('project', 'name')
+                ->default(fn (RelationManager $livewire): int => $livewire->getOwnerRecord()->id)
+                ->disabled()
+                ->dehydrated()
+                ->required(),
+        ]);
+}
 }
