@@ -31,29 +31,62 @@ class EmployeesTable
                 return $query;
             })
             ->columns([
-                TextColumn::make('first_name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('last_name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('email')
-                    ->searchable()
-                    ->sortable(),
+            TextColumn::make('first_name')
+                ->icon('heroicon-o-user')
+                ->iconColor('primary')
+                ->searchable()
+                ->sortable(),
+            TextColumn::make('last_name')
+                ->icon('heroicon-o-user')
+                ->iconColor('primary')
+                ->searchable()
+                ->sortable(),
+            TextColumn::make('email')
+                ->icon('heroicon-o-envelope')
+                ->iconColor('info')
+                ->copyable()
+                ->copyMessage('Email copied!')
+                ->searchable(),
                 TextColumn::make('phone')
-                    ->searchable()
-                    ->sortable(),
+                ->icon('heroicon-o-phone')
+                ->iconColor('success')
+                ->searchable(),
                 TextColumn::make('position')
+                ->badge()
+                ->color(fn(string $state): string => match ($state) {
+                    'Manager' => 'success',
+                    'Developer' => 'info',
+                    'Designer' => 'warning',
+                    'Analyst' => 'primary',
+                    default => 'gray',
+                })
+                ->icon(fn(string $state): string => match ($state) {
+                    'Manager' => 'heroicon-o-briefcase',
+                    'Developer' => 'heroicon-o-code-bracket',
+                    'Designer' => 'heroicon-o-paint-brush',
+                    'Analyst' => 'heroicon-o-chart-bar',
+                    default => 'heroicon-o-user',
+                })
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('salary')
-                    ->money('usd')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('project.name')
-                    ->searchable()
-                    ->sortable()
-                    ->label('Project'),
+                ->money('USD')
+                ->sortable()
+                ->color(fn($state): string => match (true) {
+                    $state >= 7000 => 'success',
+                    $state >= 4000 => 'warning',
+                    default => 'danger',
+                })
+                ->icon('heroicon-o-currency-dollar')
+                ->weight('bold'),
+            TextColumn::make('project.name')
+                ->label('Project')
+                ->badge()
+                ->color('primary')
+                ->icon('heroicon-o-folder')
+                ->placeholder('No Project')
+                ->searchable()
+                ->sortable(),
             ])
             ->filters([
             SelectFilter::make('project_id')
@@ -84,7 +117,7 @@ class EmployeesTable
                         TextInput::make('salary'),
                         Select::make('project_id')
                             ->relationship('project', 'name')
-                            ->default(fn (RelationManager $livewire): int => $livewire->getOwnerRecord()->id)
+                    ->default(fn(RelationManager $livewire): int => $livewire->getOwnerRecord()->id)
                             ->dehydrated()
                             ->required(),
                     ]),
