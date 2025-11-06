@@ -18,6 +18,17 @@ class EmployeesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query) {
+                // Get the current Livewire component
+                $livewire = \Livewire\Livewire::current();
+
+                // Check if selectedProject property exists and has a value
+                if ($livewire && property_exists($livewire, 'selectedProject') && $livewire->selectedProject) {
+                    $query->where('project_id', $livewire->selectedProject);
+                }
+
+                return $query;
+            })
             ->columns([
                 TextColumn::make('first_name')
                     ->searchable()
