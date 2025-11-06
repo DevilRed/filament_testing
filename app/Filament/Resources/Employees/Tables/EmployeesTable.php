@@ -7,6 +7,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -44,7 +45,17 @@ class EmployeesTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
+                ViewAction::make()
+                    ->schema([
+                        TextInput::make('first_name'),
+                        TextInput::make('last_name'),
+                        TextInput::make('email'),
+                        TextInput::make('phone'),
+                        TextInput::make('position'),
+                        TextInput::make('salary'),
+                        TextInput::make('project_id')
+                            ->label('Project'),
+                    ]),
                 EditAction::make(),
                 DeleteAction::make()
             ])
