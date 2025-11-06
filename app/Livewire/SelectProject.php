@@ -9,15 +9,26 @@ use Illuminate\Support\Facades\Auth;
 
 class SelectProject extends Component
 {
-    public $setSelectedProject;
+    public $selectedProject;
+    public $projects;
 
-    public function updated(string $property): void {}
+    public function mount()
+    {
+        // Load projects
+        $this->projects = Project::all();
+
+        // Initialize from query string if present
+        $this->selectedProject = request('project');
+    }
+
+    public function updatedSelectedProject($value)
+    {
+        // Dispatch event to the table
+        $this->dispatch('project-selected', projectId: $value);
+    }
 
     public function render()
     {
-        $projects = Project::select('name')->get();
-        return view('livewire.select-project', [
-            'projects' => $projects
-        ]);
+        return view('livewire.select-project');
     }
 }
