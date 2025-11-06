@@ -7,7 +7,9 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -56,7 +58,20 @@ class EmployeesTable
                         TextInput::make('project_id')
                             ->label('Project'),
                     ]),
-                EditAction::make(),
+                EditAction::make()
+                    ->schema([
+                        TextInput::make('first_name'),
+                        TextInput::make('last_name'),
+                        TextInput::make('email'),
+                        TextInput::make('phone'),
+                        TextInput::make('position'),
+                        TextInput::make('salary'),
+                        Select::make('project_id')
+                            ->relationship('project', 'name')
+                            ->default(fn (RelationManager $livewire): int => $livewire->getOwnerRecord()->id)
+                            ->dehydrated()
+                            ->required(),
+                    ]),
                 DeleteAction::make()
             ])
             ->toolbarActions([
