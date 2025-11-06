@@ -35,6 +35,10 @@ class EmployeesTable
                     ->money('usd')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('project.name')
+                    ->searchable()
+                    ->sortable()
+                    ->label('Project'),
             ])
             ->filters([
                 //
