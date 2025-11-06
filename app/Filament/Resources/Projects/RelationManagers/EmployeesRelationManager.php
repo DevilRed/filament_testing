@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Projects\RelationManagers;
 
 use App\Filament\Resources\Employees\EmployeeResource;
 use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -34,6 +36,10 @@ class EmployeesRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make(),
+            ])
+            ->recordActions([
+                ViewAction::make(),
+                DeleteAction::make()
             ]);
     }
 
