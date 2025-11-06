@@ -11,6 +11,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class EmployeesTable
@@ -55,7 +56,11 @@ class EmployeesTable
                     ->label('Project'),
             ])
             ->filters([
-                //
+            SelectFilter::make('project_id')
+                ->label('Project')
+                ->relationship('project', 'name')
+                ->preload()
+                ->searchable(),
             ])
             ->recordActions([
                 ViewAction::make()

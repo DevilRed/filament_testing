@@ -22,12 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Filament::registerRenderHook(
-            'tables::toolbar.start',
-            fn(): string => $this->shouldRenderSelectProject()
-                ? Blade::render('@livewire(\'select-project\')')
-                : '',
-        );
+        //
     }
 
     protected function shouldRenderSelectProject(): bool
