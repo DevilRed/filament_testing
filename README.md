@@ -30,6 +30,7 @@ php artisan key:generate
 ```
 
 4. **Run database migrations**
+Select yes if asked to create the database file
 ```bash
 php artisan migrate
 ```
