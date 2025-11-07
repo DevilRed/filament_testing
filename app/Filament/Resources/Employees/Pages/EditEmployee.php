@@ -20,4 +20,13 @@ class EditEmployee extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            'dashboard' => 'Home',
+            '/employees' => 'Employees',
+            '' => 'Edit ' . $this->record->name,
+        ];
+    }
 }

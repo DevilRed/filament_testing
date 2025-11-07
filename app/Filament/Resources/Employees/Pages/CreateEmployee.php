@@ -14,4 +14,12 @@ class CreateEmployee extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            'dashboard' => 'Home',
+            '' => 'Employees',
+        ];
+    }
 }

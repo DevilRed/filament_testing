@@ -21,4 +21,13 @@ class EditProject extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            'dashboard' => 'Home',
+            '/projects' => 'Projects',
+            '' => 'Edit ' . $this->record->name,
+        ];
+    }
 }

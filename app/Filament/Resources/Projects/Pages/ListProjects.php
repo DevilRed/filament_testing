@@ -17,4 +17,12 @@ class ListProjects extends ListRecords
                 ->createAnother(false),
         ];
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            'dashboard' => 'Home',
+            '' => 'Projects',
+        ];
+    }
 }

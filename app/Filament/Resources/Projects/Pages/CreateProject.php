@@ -14,4 +14,13 @@ class CreateProject extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            'dashboard' => 'Home',
+            'projects.index' => 'Projects',
+            '' => 'Create Project',
+        ];
+    }
 }

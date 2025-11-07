@@ -62,4 +62,12 @@ class ListEmployees extends ListRecords
 
         return $tabs;
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            'dashboard' => 'Home',
+            '' => 'Employees',
+        ];
+    }
 }

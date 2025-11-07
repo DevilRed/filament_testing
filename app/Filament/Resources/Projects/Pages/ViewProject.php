@@ -21,4 +21,13 @@ class ViewProject extends ViewRecord
                 ->icon('heroicon-o-arrow-left')
         ];
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            'dashboard' => 'Home',
+            '/projects' => 'Projects',
+            '' => $this->record->name,
+        ];
+    }
 }
