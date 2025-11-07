@@ -38,7 +38,6 @@ class ProjectsTable
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'active' => 'success',
-                        'inactive' => 'danger',
                         'pending' => 'gray',
                         default => 'white'
                     })
@@ -48,7 +47,6 @@ class ProjectsTable
                 SelectFilter::make('status')
                     ->options([
                         'active' => 'Active',
-                        'inactive' => 'Inactive',
                         'pending' => 'Pending',
                     ]),
                 TernaryFilter::make('has_employees')
@@ -60,25 +58,26 @@ class ProjectsTable
             ])
             ->recordActions([
                 ActionGroup::make([
-                    // View in Store action
                     Action::make('viewInStore')
                         ->label('View in Store')
                         ->icon('heroicon-o-shopping-cart')
                         ->url(fn(Project $record): string => static::getStoreUrl($record))
                         ->openUrlInNewTab(),
+
+                    ViewAction::make(),
+                    EditAction::make(),
+
+                    Action::make('duplicate')
+                        ->label('Duplicate project')
+                        ->icon('heroicon-o-document-duplicate')
+                        ->action(fn(Project $record) => static::duplicateProject($record))
+                        ->requiresConfirmation()
+                        ->modalHeading('Duplicate Project')
+                        ->modalDescription('Are you sure you want to duplicate this project? This will create a new project with the same details.')
+                        ->modalSubmitActionLabel('Yes, duplicate it'),
+
+                    DeleteAction::make(),
                 ]),
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
-                // Duplicate action
-                Action::make('duplicate')
-                    ->label('Duplicate project')
-                    ->icon('heroicon-o-document-duplicate')
-                    ->action(fn(Project $record) => static::duplicateProject($record))
-                    ->requiresConfirmation()
-                    ->modalHeading('Duplicate Project')
-                    ->modalDescription('Are you sure you want to duplicate this project? This will create a new project with the same details.')
-                    ->modalSubmitActionLabel('Yes, duplicate it'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -86,7 +85,7 @@ class ProjectsTable
                     BulkAction::make('exportSelectedCsv')
                         ->label('Export to CSV')
                         ->icon('heroicon-o-arrow-down-tray')
-                        ->action(fn (Collection $records) => static::exportToCsv($records))
+                        ->action(fn(Collection $records) => static::exportToCsv($records))
                         ->deselectRecordsAfterCompletion(),
                 ]),
             ])
@@ -97,6 +96,7 @@ class ProjectsTable
                     ->action(fn($livewire) => static::exportAllToCsv($livewire)),
             ]);
     }
+
     /**
      * Duplicate a project record
      */
