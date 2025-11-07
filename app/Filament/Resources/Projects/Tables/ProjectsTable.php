@@ -17,6 +17,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProjectsTable
 {
@@ -120,60 +121,63 @@ class ProjectsTable
         }
     }
 
-    public static function exportToCsv(Collection $records): void
+    public static function exportToCsv(Collection $records): StreamedResponse
     {
         $fileName = 'projects-' . now()->format('Y-m-d-H-i-s') . '.csv';
 
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        return response()->streamDownload(function () use ($records) {
+            $handle = fopen('php://output', 'w');
 
-        $handle = fopen('php://output', 'w');
+            // BOM for UTF-8
+            fwrite($handle, "\xEF\xBB\xBF");
 
-        // Add BOM for UTF-8
-        fwrite($handle, "\xEF\xBB\xBF");
+            // CSV headers
+            fputcsv($handle, ['Name', 'Description', 'Status']);
 
-        // CSV headers
-        fputcsv($handle, ['Name', 'Description', 'Status']);
+            // Data rows
+            foreach ($records as $record) {
+                fputcsv($handle, [
+                    $record->name,
+                    $record->description,
+                    $record->status,
+                ]);
+            }
 
-        // data rows
-        foreach ($records as $record) {
-            fputcsv($handle, [
-                $record->name,
-                $record->description,
-                $record->status,
-            ]);
-        }
-
-        fclose($handle);
-        exit;
+            fclose($handle);
+        }, $fileName, [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 
-    public static function exportAllToCsv($livewire): void
+    public static function exportAllToCsv($livewire): StreamedResponse
     {
         $query = $livewire->getFilteredTableQuery();
-        $records = $query->withCount('employees')->get();
+        $records = $query->get();
 
         $fileName = 'projects-all-' . now()->format('Y-m-d-H-i-s') . '.csv';
 
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        return response()->streamDownload(function () use ($records) {
+            $handle = fopen('php://output', 'w');
 
-        $handle = fopen('php://output', 'w');
+            // Add BOM for UTF-8
+            fwrite($handle, "\xEF\xBB\xBF");
 
-        fwrite($handle, "\xEF\xBB\xBF");
+            // CSV headers
+            fputcsv($handle, ['Name', 'Description', 'Status']);
 
-        fputcsv($handle, ['Name', 'Description', 'Status']);
+            // Data rows
+            foreach ($records as $record) {
+                fputcsv($handle, [
+                    $record->name,
+                    $record->description,
+                    $record->status,
+                ]);
+            }
 
-        foreach ($records as $record) {
-            fputcsv($handle, [
-                $record->name,
-                $record->description,
-                $record->status,
-            ]);
-        }
-
-        fclose($handle);
-        exit;
+            fclose($handle);
+        }, $fileName, [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 
     public static function getStoreUrl(Project $record): string
