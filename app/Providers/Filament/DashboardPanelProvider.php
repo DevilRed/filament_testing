@@ -29,9 +29,20 @@ class DashboardPanelProvider extends PanelProvider
             ->id('dashboard')
             ->path('/') // Make this the root path
             ->login() // Enable login if needed
+            ->brandName('Develop')
+            ->brandLogo(asset('images/logo-white.png'))
+            ->brandLogoHeight('2.5rem')
+            ->darkModeBrandLogo(asset('images/logo-white.png'))
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Slate,
+                'gray' => Color::Gray,
+                'success' => Color::Emerald,
+                'warning' => Color::Amber,
+                'danger' => Color::Red,
+                'info' => Color::Blue,
             ])
+            ->font('Inter')
+            ->favicon(asset('images/favicon.ico'))
             ->breadcrumbs(true)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
