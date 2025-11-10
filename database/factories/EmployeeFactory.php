@@ -20,8 +20,8 @@ class EmployeeFactory extends Factory
             'first_name' => $this->faker->name(),
             'last_name' => $this->faker->lastName() ,
             'email' => $this->faker->email(),
-            'phone' => $this->faker->phoneNumber(),
-            'position' => $this->faker->randomElement(['PHP', 'Javascript']),
+            'phone' => $this->faker->numerify('##########'),
+            'position' => $this->faker->randomElement(['Backend PHP', 'Javascript']),
             'salary' =>$this->faker->numberBetween(1000, 9999),
         ];
     }
