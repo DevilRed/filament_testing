@@ -93,3 +93,21 @@ it('can filter projects by status', function () {
         ->assertCanSeeTableRecords($activeProjects)
         ->assertCanNotSeeTableRecords($pendingProjects);
 });
+
+it('can sort projects by name', function() {
+    $projects = Project::factory()->count(5)->create();
+    livewire(ListProjects::class)
+        ->sortTable('name')
+        ->assertCanSeeTableRecords($projects->sortBy('name'), inOrder: true);
+});
+
+it('can bulk delete projects', function () {
+    $projects = Project::factory()->count(5)->create();
+    livewire(ListProjects::class)
+        ->callTableBulkAction('delete', $projects)
+        ->assertSuccessful();
+
+    foreach ($projects as $project) {
+        $this->assertModelMissing($project);
+    }
+});
