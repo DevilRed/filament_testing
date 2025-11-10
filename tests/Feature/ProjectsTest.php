@@ -5,6 +5,7 @@ use App\Filament\Resources\Projects\Pages\EditProject;
 use App\Filament\Resources\Projects\Pages\ListProjects;
 use Livewire\Livewire;
 use App\Models\Project;
+use Filament\Actions\Testing\TestAction;
 
 use function Pest\Livewire\livewire;
 
@@ -103,8 +104,12 @@ it('can sort projects by name', function() {
 
 it('can bulk delete projects', function () {
     $projects = Project::factory()->count(5)->create();
+
+    // call bulkAction for filament v4.2.0
     livewire(ListProjects::class)
-        ->callTableBulkAction('delete', $projects)
+        ->selectTableRecords($projects)
+        ->call('mountTableBulkAction', 'delete')
+        ->call('callMountedTableBulkAction')
         ->assertSuccessful();
 
     foreach ($projects as $project) {
