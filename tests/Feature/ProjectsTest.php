@@ -73,3 +73,23 @@ it('can delete a project', function () {
 
     $this->assertModelMissing($project);
 });
+
+it('can search a given project', function() {
+    $projects = Project::factory()->count(10)->create();
+    $targetProject = $projects->first();
+
+    livewire(ListProjects::class)
+        ->searchTable($targetProject->name)
+        ->assertCanSeeTableRecords([$targetProject])
+        ->assertCanNotSeeTableRecords($projects->skip($targetProject->id));
+});
+
+it('can filter projects by status', function () {
+    $activeProjects = Project::factory()->count(10)->create(['status' => 'active']);
+    $pendingProjects = Project::factory()->count(10)->create(['status' => 'pending']);
+
+    livewire(ListProjects::class)
+        ->filterTable('status', 'active')
+        ->assertCanSeeTableRecords($activeProjects)
+        ->assertCanNotSeeTableRecords($pendingProjects);
+});
