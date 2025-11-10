@@ -45,3 +45,31 @@ it('can create a project', function () {
         'status' => $newProject['status'],
     ]);
 });
+
+it('can update a project', function() {
+    $project = Project::factory()->create();
+    $newData = [
+        'name' => 'Updated name',
+        'description' => 'Updated description',
+        'status' => 'active'
+    ];
+
+    livewire(EditProject::class, ['record' => $project->id])
+        ->fillForm($newData)
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $this->assertDatabaseHas('projects', [
+        'name' => $newData['name'],
+        'description' => $newData['description'],
+        'status' => $newData['status'],
+    ]);
+});
+
+it('can delete a project', function () {
+    $project = Project::factory()->create();
+    livewire(EditProject::class, ['record' => $project->getRouteKey()])
+        ->callAction('delete');
+
+    $this->assertModelMissing($project);
+});
