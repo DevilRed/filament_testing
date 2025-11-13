@@ -118,67 +118,78 @@ describe('EmployeeResource', function() {
             ->assertCanSeeTableRecords($employees->sortBy('first_name'), inOrder: true);
     });
 
-    it('renders the all employees tab with correct badge and icon', function () {
-        $project = Project::factory()->create();
-        $employees = Employee::factory()->for($project)->count(5)->create();
+    describe('tabs section', function() {
+        it('renders the all employees tab with correct badge and icon', function () {
+            $project = Project::factory()->create();
+            $employees = Employee::factory()->for($project)->count(5)->create();
 
-        livewire(ListEmployees::class)
-            ->assertSuccessful();
+            livewire(ListEmployees::class)
+                ->assertSuccessful();
 
-        $component = new ListEmployees();
-        $tabs = $component->getTabs();
+            $component = new ListEmployees();
+            $tabs = $component->getTabs();
 
-        expect($tabs)->toHaveKey('all');
-        expect($tabs['all'])->toBeInstanceOf(Tab::class);
-        expect($tabs['all']->getLabel())->toBe('All Employees');
-    });
+            expect($tabs)->toHaveKey('all');
+            expect($tabs['all'])->toBeInstanceOf(Tab::class);
+            expect($tabs['all']->getLabel())->toBe('All Employees');
+        });
 
-    it('includes a disabled separator tab for position filtering', function () {
-        $project = Project::factory()->create();
-        $employees = Employee::factory()->for($project)->count(5)->create();
+        it('includes a disabled separator tab for position filtering', function () {
+            $project = Project::factory()->create();
+            $employees = Employee::factory()->for($project)->count(5)->create();
 
-        $component = new ListEmployees();
-        $tabs = $component->getTabs();
+            $component = new ListEmployees();
+            $tabs = $component->getTabs();
 
-        expect($tabs)->toHaveKey('separator');
-        expect($tabs['separator']->isDisabled())->toBeTrue();
-        expect($tabs['separator']->getLabel())->toBe('── Filter by Position ──');
-    });
+            expect($tabs)->toHaveKey('separator');
+            expect($tabs['separator']->isDisabled())->toBeTrue();
+            expect($tabs['separator']->getLabel())->toBe('── Filter by Position ──');
+        });
 
-    it('creates tabs for each unique position', function () {
-        $project = Project::factory()->create();
-        Employee::factory()->for($project)->create(['position' => 'Developer']);
-        Employee::factory()->for($project)->create(['position' => 'Manager']);
-        Employee::factory()->for($project)->create(['position' => 'Designer']);
+        it('creates tabs for each unique position', function () {
+            $project = Project::factory()->create();
+            Employee::factory()->for($project)->create(['position' => 'Developer']);
+            Employee::factory()->for($project)->create(['position' => 'Manager']);
+            Employee::factory()->for($project)->create(['position' => 'Designer']);
 
-        $component = new ListEmployees();
-        $tabs = $component->getTabs();
+            $component = new ListEmployees();
+            $tabs = $component->getTabs();
 
-        expect($tabs)->toHaveKey('developer');
-        expect($tabs)->toHaveKey('manager');
-        expect($tabs)->toHaveKey('designer');
-    });
+            expect($tabs)->toHaveKey('developer');
+            expect($tabs)->toHaveKey('manager');
+            expect($tabs)->toHaveKey('designer');
+        });
 
-    it('filters employees by position in tab query', function () {
-        $project = Project::factory()->create();
-        $developers = Employee::factory()->count(3)->for($project)->create(['position' => 'Developer']);
-        $managers = Employee::factory()->count(2)->for($project)->create(['position' => 'Manager']);
+        it('filters employees by position in tab query', function () {
+            $project = Project::factory()->create();
+            $developers = Employee::factory()->count(3)->for($project)->create(['position' => 'Developer']);
+            $managers = Employee::factory()->count(2)->for($project)->create(['position' => 'Manager']);
 
-        livewire(ListEmployees::class)
-            ->set('activeTab', 'developer')
-            ->assertCanSeeTableRecords($developers)
-            ->assertCanNotSeeTableRecords($managers);
-    });
+            livewire(ListEmployees::class)
+                ->set('activeTab', 'developer')
+                ->assertCanSeeTableRecords($developers)
+                ->assertCanNotSeeTableRecords($managers);
+        });
 
-    it('updates tabs when employees are added', function () {
-        $component = new ListEmployees();
-        $initialTabs = $component->getTabs();
-        expect($initialTabs)->toHaveCount(2); // 'all' and 'separator'
+        it('updates tabs when employees are added', function () {
+            $component = new ListEmployees();
+            $initialTabs = $component->getTabs();
+            expect($initialTabs)->toHaveCount(2); // 'all' and 'separator'
 
-        Employee::factory()->create(['position' => 'Analyst']);
+            Employee::factory()->create(['position' => 'Analyst']);
 
-        $component = new ListEmployees();
-        $updatedTabs = $component->getTabs();
-        expect($updatedTabs)->toHaveCount(3); // 'all', 'separator', 'analyst'
+            $component = new ListEmployees();
+            $updatedTabs = $component->getTabs();
+            expect($updatedTabs)->toHaveCount(3); // 'all', 'separator', 'analyst'
+        });
+
+        it('returns empty tabs when no employees exist', function () {
+            $component = new ListEmployees();
+            $tabs = $component->getTabs();
+
+            expect($tabs)->toHaveKey('all');
+            expect($tabs)->toHaveKey('separator');
+            expect($tabs['all']->getBadge())->toBe(0);
+        });
     });
 });
