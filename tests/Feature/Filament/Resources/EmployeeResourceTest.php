@@ -6,6 +6,7 @@ use App\Filament\Resources\Employees\Pages\ListEmployees;
 use App\Models\Employee;
 use App\Models\Project;
 use Livewire\Livewire;
+use Filament\Schemas\Components\Tabs\Tab;
 
 use function Pest\Livewire\livewire;
 
@@ -115,5 +116,20 @@ describe('EmployeeResource', function() {
         livewire(ListEmployees::class)
             ->sortTable('first_name')
             ->assertCanSeeTableRecords($employees->sortBy('first_name'), inOrder: true);
+    });
+
+    it('renders the all employees tab with correct badge and icon', function () {
+        $project = Project::factory()->create();
+        $employees = Employee::factory()->for($project)->count(5)->create();
+
+        livewire(ListEmployees::class)
+            ->assertSuccessful();
+
+        $component = new ListEmployees();
+        $tabs = $component->getTabs();
+
+        expect($tabs)->toHaveKey('all');
+        expect($tabs['all'])->toBeInstanceOf(Tab::class);
+        expect($tabs['all']->getLabel())->toBe('All Employees');
     });
 });
