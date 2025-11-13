@@ -169,4 +169,16 @@ describe('EmployeeResource', function() {
             ->assertCanSeeTableRecords($developers)
             ->assertCanNotSeeTableRecords($managers);
     });
+
+    it('updates tabs when employees are added', function () {
+        $component = new ListEmployees();
+        $initialTabs = $component->getTabs();
+        expect($initialTabs)->toHaveCount(2); // 'all' and 'separator'
+
+        Employee::factory()->create(['position' => 'Analyst']);
+
+        $component = new ListEmployees();
+        $updatedTabs = $component->getTabs();
+        expect($updatedTabs)->toHaveCount(3); // 'all', 'separator', 'analyst'
+    });
 });
